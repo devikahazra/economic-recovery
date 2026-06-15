@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recovery Toolkit: Economic Independence After Abuse</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.0.0/tabler-icons.min.css">
+
   <style>
     * {
       margin: 0;
@@ -398,13 +398,13 @@ const sectionList = document.getElementById('sectionList');
 sections.forEach((section, index) => {
   const card = document.createElement('div');
   card.className = 'section-card';
-  card.dataset.sectionIndex = index;
+  card.setAttribute('data-section', index);
   
   const header = document.createElement('div');
   header.className = 'section-header';
   header.innerHTML = `
     <h2>${section.title}</h2>
-    <i class="ti ti-chevron-down section-icon" aria-hidden="true"></i>
+    <span class="section-icon">▼</span>
   `;
   header.onclick = () => toggleSection(index);
   
@@ -441,7 +441,7 @@ const totalCheckboxes = document.querySelectorAll('input[type="checkbox"]').leng
 document.getElementById('totalItems').textContent = totalCheckboxes;
 
 function toggleSection(index) {
-  const card = document.querySelector(`[data-sectionindex="${index}"]`);
+  const card = document.querySelector(`[data-section="${index}"]`);
   card.classList.toggle('open');
 }
 
