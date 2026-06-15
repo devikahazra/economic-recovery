@@ -50,7 +50,6 @@
     .toolkit-header p {
       font-size: 15px;
       color: #888780;
-      max-width: 600px;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -203,6 +202,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      margin-left: 2rem;
     }
 
     .checklist-item {
@@ -415,6 +415,37 @@ sections.forEach((section, index) => {
   info.className = 'section-info';
   info.textContent = section.info;
   
+  const progressBar = document.createElement('div');
+  progressBar.style.display = 'flex';
+  progressBar.style.alignItems = 'center';
+  progressBar.style.gap = '12px';
+  progressBar.style.marginBottom = '1.5rem';
+  progressBar.className = `section-progress-${index}`;
+  
+  const progressTrack = document.createElement('div');
+  progressTrack.style.flex = '1';
+  progressTrack.style.height = '6px';
+  progressTrack.style.backgroundColor = '#d3d1c7';
+  progressTrack.style.borderRadius = '3px';
+  progressTrack.style.overflow = 'hidden';
+  
+  const progressFill = document.createElement('div');
+  progressFill.style.height = '100%';
+  progressFill.style.backgroundColor = '#185fa5';
+  progressFill.style.width = '0%';
+  progressFill.className = `section-progress-fill-${index}`;
+  progressTrack.appendChild(progressFill);
+  
+  const progressText = document.createElement('span');
+  progressText.style.fontSize = '12px';
+  progressText.style.color = '#888780';
+  progressText.style.minWidth = '45px';
+  progressText.className = `section-progress-text-${index}`;
+  progressText.textContent = '0/' + section.checklist.length;
+  
+  progressBar.appendChild(progressTrack);
+  progressBar.appendChild(progressText);
+  
   const checklist = document.createElement('div');
   checklist.className = 'checklist';
   
@@ -430,6 +461,7 @@ sections.forEach((section, index) => {
   });
   
   content.appendChild(info);
+  content.appendChild(progressBar);
   content.appendChild(checklist);
   
   card.appendChild(header);
@@ -452,6 +484,19 @@ function updateProgress() {
   
   document.getElementById('progressFill').style.width = percentage + '%';
   document.getElementById('progressText').textContent = checkedCheckboxes.length;
+  
+  // Update per-section progress bars
+  sections.forEach((section, sectionIndex) => {
+    const sectionCheckboxes = document.querySelectorAll(`input[id^="item-${sectionIndex}-"]`);
+    const sectionChecked = document.querySelectorAll(`input[id^="item-${sectionIndex}-"]:checked`);
+    const sectionPercentage = (sectionChecked.length / sectionCheckboxes.length) * 100;
+    
+    const progressFill = document.querySelector(`.section-progress-fill-${sectionIndex}`);
+    const progressText = document.querySelector(`.section-progress-text-${sectionIndex}`);
+    
+    if (progressFill) progressFill.style.width = sectionPercentage + '%';
+    if (progressText) progressText.textContent = sectionChecked.length + '/' + sectionCheckboxes.length;
+  });
 }
 </script>
 
